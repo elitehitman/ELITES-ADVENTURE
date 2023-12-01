@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import * #basic pygame imports
 
 #Global variables throughout the  game
-fps = 30
+fps = 50
 screen_width = 1296
 screen_height = 648
 
@@ -24,7 +24,8 @@ pipe ='Data/Images/pipe.png'
 brick = 'Data/Images/brick.png'
 start_screen = 'Data/Images/start_screen.jpg'
 logo = 'Data/Images/logo.png'
-beetle = 'Data/Images/beetle.png'
+beetle1 = 'Data/Images/beetle-1.png'
+beetle2 = 'Data/Images/beetle-2.png'
 
 def welcomeScreen():
     
@@ -47,17 +48,19 @@ def mainGame():
    chary = int(screen_height-(screen_height-game_sprites['character1'].get_height()))*6.2 #-game_sprites['pipe'].get_height() 
     #creating pipe   
     # pipeHeight = game_sprites['pipe'].get_height()
-   pipe1x = int(random.randint(489, screen_width-200))
+   pipe1x = int(900)
    pipe1y = int(480)
-   pipe2x = int(pipe1x-400)
+   pipe2x = int(400)
    pipe2y = int(480)
-   beetlex = int(random.randint(pipe2x,pipe1x-30))
+   beetlex = int(random.randint(450,850))
    beetley = int(530)
-   
+   beetle_vel_x = 5
+   beetle_dir = 1
    jump_count = 10
    Jumping = False
    
    current_char = game_sprites['character1']
+   curr_beetle = game_sprites['beetle2']
    
    while True:
         for event in pygame.event.get():
@@ -73,7 +76,7 @@ def mainGame():
                 current_char = game_sprites['character3']
             else:
                 current_char = game_sprites['character1']    
-            if (pipe2x - charx) > 50 and (pipe1x - charx)>50:  
+            if (charx <= 340 or charx>=410) and (charx <=840 or charx >=910):
                     charx += 10
         if keys[pygame.K_LEFT]:
             
@@ -83,12 +86,21 @@ def mainGame():
                 current_char = game_sprites['character6']
             else:
                 current_char = game_sprites['character4']
-            if (pipe2x - charx) > 50 or (pipe1x - charx)>50: 
+            if not (charx < 450 and charx>370) and not (charx < 950 and charx >870) and charx > 0:
                 charx -= 10
         if keys[K_SPACE] and not Jumping:
                     Jumping =True
-        
+        if keys[K_SPACE] and keys[pygame.K_RIGHT]:
+            if charx >=330 and charx <=400:
+                charx = pipe2x + 50
+            elif charx >= 830 and charx<=900:
+                charx = pipe1x + 50    
                     
+        if keys[K_SPACE] and keys[pygame.K_LEFT]:
+            if charx <=470 and charx>400: 
+                charx = pipe2x - 50
+            elif charx <=970 and charx >900:
+                charx = pipe1x -50        
         if Jumping:
             if jump_count >=-10:
                 chary -= (jump_count * abs(jump_count))*0.5
@@ -101,25 +113,17 @@ def mainGame():
              Jumping = False    
              jump_count = 10
              chary = int(screen_height-(screen_height-game_sprites['character1'].get_height()))*6.2 
-               
-        # if charx + current_char.get_width() > pipe2x and charx < pipe2x + game_sprites['pipe'].get_width() and chary < pipe2y:
-        #     Jumping = False
-        #     chary = int(screen_height - (screen_height - game_sprites['character1'].get_height())) * 6.2
-        #     charx = pipe2x + game_sprites['pipe'].get_width()  # Move character to the right of the pipe
-        # elif charx + current_char.get_width() > pipe1x and charx < pipe1x + game_sprites['pipe'].get_width() and chary < pipe1y:
-        #     Jumping = False
-        #     chary = int(screen_height - (screen_height - game_sprites['character1'].get_height())) * 6.2
-        #     charx = pipe1x + game_sprites['pipe'].get_width()  # Move character to the right of the pipe
-        # elif charx < pipe1x + game_sprites['pipe'].get_width() and charx + current_char.get_width() > pipe1x and chary < pipe1y:
-        #     Jumping = False
-        #     chary = int(screen_height - (screen_height - game_sprites['character1'].get_height())) * 6.2
-        #     charx = pipe1x - current_char.get_width()  # Move character to the left of the pipe
-        # elif charx < pipe2x + game_sprites['pipe'].get_width() and charx + current_char.get_width() > pipe2x and chary < pipe2y:
-        #     Jumping = False
-        #     chary = int(screen_height - (screen_height - game_sprites['character1'].get_height())) * 6.2
-        #     charx = pipe2x - current_char.get_width()  # Move character to the left of the pipe
+        
+        
+        #beetle related 
+        beetlex += beetle_dir * beetle_vel_x
+        if beetlex >= 850:
+            beetle_dir *= -1
+            curr_beetle = game_sprites['beetle1']
+        if beetlex <= 450: 
+            beetle_dir *= -1
+            curr_beetle = game_sprites['beetle2']
 
-               
         screen.blit(game_sprites['background-1'], ( 0,0))
         screen.blit(game_sprites['pipe'], ( pipe2x,pipe2y))
         screen.blit(game_sprites['pipe'], ( pipe1x,pipe1y))
@@ -127,7 +131,7 @@ def mainGame():
         screen.blit(current_char, (charx, chary))
         
         
-        screen.blit(game_sprites['beetle'], (beetlex, beetley))
+        screen.blit(curr_beetle, (beetlex, beetley))
         pygame.display.update()
         clock.tick(fps)
                 
@@ -136,7 +140,7 @@ if __name__ == "__main__":
     #Main function from where game starts
     pygame.init() #initializes all pygame modules
     clock = pygame.time.Clock()
-    pygame.display.set_caption('Adventurer By Elites')
+    pygame.display.set_caption('Adventures By Elites')
     
     # Game sprites
     game_sprites['start_screen'] = pygame.image.load(start_screen).convert_alpha()
@@ -151,7 +155,8 @@ if __name__ == "__main__":
     game_sprites['character4'] = pygame.image.load(character4).convert_alpha()
     game_sprites['character5'] = pygame.image.load(character5).convert_alpha()
     game_sprites['character6'] = pygame.image.load(character6).convert_alpha()
-    game_sprites['beetle'] = pygame.image.load(beetle).convert_alpha()
+    game_sprites['beetle2'] = pygame.image.load(beetle2).convert_alpha()
+    game_sprites['beetle1'] = pygame.image.load(beetle1).convert_alpha()
     
     # Game Sounds     
     # game_sounds['game-over'] = pygame.mixer.Sound('Data/Music/game-over.wav')
