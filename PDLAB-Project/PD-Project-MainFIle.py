@@ -27,8 +27,14 @@ logo = "Data/Images/logo.png"
 beetle1 = "Data/Images/beetle-1.png"
 beetle2 = "Data/Images/beetle-2.png"
 cannon = "Data/Images/Cannon.png"
+cannonInverted = "Data/Images/CannonInverted.png"
 bulletLeft = "Data/Images/bullet-left.png"
 bulletRight = "Data/Images/bullet-right.png"
+bricks3 = "Data/Images/bricks.png"
+flag = "Data/Images/flag.png"
+lever = "Data/Images/lever.png"
+leverPull = "Data/Images/leverPull.png"
+flagLift = "Data/Images/flag1.png"
 
 
 def welcomeScreen():
@@ -46,7 +52,8 @@ def welcomeScreen():
 
 
 def mainGame():
-    background_changed = False
+    background_changed1 = False
+    background_changed2 = False
     score = 0
     charx = int(screen_width / 10)
     chary = (
@@ -63,12 +70,22 @@ def mainGame():
     beetley = int(530)
     beetle_vel_x = 5
     bullet_left_x = 573
+    bullet_left_x2 = screen_width - 100
     bullet_right_x = 653
     bullet_left_vel = -5
     bullet_right_vel = 5
+    cannon_x = 600
+    cannon_y = 490
     beetle_dir = 1
     jump_count = 10
+    flagx = 0
+    flagy = 490
     Jumping = False
+    flag_activated = False
+    lever_activated = False
+    flag_lift = False
+    char_vel_x = 5
+    char_vel_y = -5
 
     current_char = game_sprites["character1"]
     curr_beetle = game_sprites["beetle2"]
@@ -81,12 +98,12 @@ def mainGame():
         keys = pygame.key.get_pressed()
         curr_background = (
             game_sprites["background-1"]
-            if not background_changed
+            if not background_changed1
             else game_sprites["background-2"]
         )
         screen.blit(curr_background, (0, 0))
         screen.blit(current_char, (charx, chary))
-        if not background_changed:
+        if not background_changed1:
             screen.blit(game_sprites["pipe"], (pipe2x, pipe2y))
             screen.blit(game_sprites["pipe"], (pipe1x, pipe1y))
             screen.blit(curr_beetle, (beetlex, beetley))
@@ -153,24 +170,24 @@ def mainGame():
                 beetle_dir *= -1
                 curr_beetle = game_sprites["beetle2"]
 
-            if charx > screen_width - 100 and not background_changed:
+            if charx > screen_width - 20 and not background_changed1:
                 charx = 0
-                background_changed = True
+                background_changed1 = True
 
             pygame.display.update()
             clock.tick(fps)
 
-        if background_changed:
+        if background_changed1:
             if bullet_left_x < 0:
                 bullet_left_x = 573
-                bullet_left_x += bullet_left_vel
+                bullet_left_x = bullet_left_x + bullet_left_vel
             if bullet_right_x > screen_width:
                 bullet_right_x = 652
                 bullet_right_x += bullet_right_vel
-            if charx <= 573:
+            if charx < 600:
                 bullet_left_x += bullet_left_vel
                 bullet_right_x = screen_width + 100
-            if charx >= 652:
+            if charx > 700:
                 bullet_right_x += bullet_right_vel
                 bullet_left_x = -50
             if keys[pygame.K_RIGHT]:
@@ -212,10 +229,89 @@ def mainGame():
                         )
                         * 6.2
                     )
-
-            screen.blit(game_sprites["cannon"], (600, 490))
+            curr_lever = game_sprites["lever"]
+            if (
+                charx > screen_width - 150
+                and keys[pygame.K_LCTRL]
+                and not lever_activated
+            ):
+                lever_activated = True
+            if lever_activated:
+                curr_lever = game_sprites["lever-pull"]
+                bullet_left_x = screen_width + 500
+            bullet_left_x2 += bullet_left_vel
+            if bullet_left_x2 < 0:
+                bullet_left_x2 = screen_width - 100
+            flag1 = (game_sprites["flag"], (flagx, flagy))
+            flag2 = (game_sprites["flag-lift"], (charx + 15, chary + 10))
+            screen.blit(game_sprites["cannon"], (cannon_x, cannon_y))
+            screen.blit(game_sprites["cannon-inverted"], (screen_width - 55, 300))
+            screen.blit(game_sprites["bricks-3"], (screen_width - 180, 255))
             screen.blit(game_sprites["bullet-left"], (bullet_left_x, 500))
+            screen.blit(game_sprites["bullet-left"], (bullet_left_x2, 340))
             screen.blit(game_sprites["bullet-right"], (bullet_right_x, 500))
+            screen.blit(curr_lever, (screen_width - 80, 510))
+
+            if (
+                charx > screen_width - 150
+                and keys[pygame.K_LCTRL]
+                and not flag_activated
+            ):
+                flag_activated = True
+
+            # If the flag is activated, keep drawing it at the same position
+            if flag_activated and lever_activated:
+                screen.blit(*flag1)
+            if (
+                flag_activated
+                and lever_activated
+                and charx < 50
+                and keys[pygame.K_LCTRL]
+            ):
+                flag_lift = True
+            if flag_lift and not background_changed2:
+                screen.blit(*flag2)
+                flagx = -100
+                if charx > 1200:
+                    background_changed2 = True
+
+            if background_changed2:
+                curr_background = game_sprites["background-3"]
+                screen.blit(curr_background, (0, 0))
+                if keys[pygame.K_RIGHT]:
+                    current_char = game_sprites["character1"]
+                    if current_char == game_sprites["character1"]:
+                        current_char = game_sprites["character2"]
+                    elif current_char == game_sprites["character2"]:
+                        current_char = game_sprites["character3"]
+                    else:
+                        current_char = game_sprites["character1"]
+                    charx += 10
+                if keys[pygame.K_LEFT]:
+                    current_char = game_sprites["character4"]
+                    if current_char == game_sprites["character4"]:
+                        current_char = game_sprites["character5"]
+                    elif current_char == game_sprites["character5"]:
+                        current_char = game_sprites["character6"]
+                    else:
+                        current_char = game_sprites["character4"]
+                    charx -= 5
+                if keys[K_SPACE] and not Jumping:
+                    Jumping = True
+                if Jumping:
+                    if jump_count >= -10:
+                        chary -= (jump_count * abs(jump_count)) * 0.5
+                        jump_count -= 1
+                    else:
+                        Jumping = False
+                        jump_count = 10
+                        chary = (
+                            int(screen_height - game_sprites["character1"].get_height())
+                            * 6.2
+                        )
+
+                screen.blit(current_char, (charx - 1200, chary))
+
             pygame.display.update()
             clock.tick(fps)
 
@@ -242,8 +338,14 @@ if __name__ == "__main__":
     game_sprites["beetle2"] = pygame.image.load(beetle2).convert_alpha()
     game_sprites["beetle1"] = pygame.image.load(beetle1).convert_alpha()
     game_sprites["cannon"] = pygame.image.load(cannon).convert_alpha()
+    game_sprites["cannon-inverted"] = pygame.image.load(cannonInverted).convert_alpha()
     game_sprites["bullet-left"] = pygame.image.load(bulletLeft).convert_alpha()
     game_sprites["bullet-right"] = pygame.image.load(bulletRight).convert_alpha()
+    game_sprites["bricks-3"] = pygame.image.load(bricks3).convert_alpha()
+    game_sprites["flag"] = pygame.image.load(flag).convert_alpha()
+    game_sprites["lever"] = pygame.image.load(lever).convert_alpha()
+    game_sprites["lever-pull"] = pygame.image.load(leverPull).convert_alpha()
+    game_sprites["flag-lift"] = pygame.image.load(flagLift).convert_alpha()
 
     # Game Sounds
     # game_sounds['game-over'] = pygame.mixer.Sound('Data/Music/game-over.wav')
@@ -252,8 +354,7 @@ if __name__ == "__main__":
     # game_sounds['jump'] = pygame.mixer.Sound('Data/Music')
     # game_sounds['something'] = pygame.mixer.Sound('Data/Music')
 
-
-# Game Loop
-while True:
-    welcomeScreen()
-    mainGame()
+    # Game Loop
+    while True:
+        welcomeScreen()
+        mainGame()
