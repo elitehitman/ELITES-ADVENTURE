@@ -1,1 +1,2 @@
-)>
+
+            clock.tick(fps)
