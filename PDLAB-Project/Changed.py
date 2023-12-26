@@ -57,6 +57,8 @@ fire2 = "Data/Images/fire2.png"
 end = "Data/Images/end.png"
 crusher = "Data/Images/crusher.png"
 restart = "Data/Images/restart.jpg"
+lives1 = "Data/Images/lives1.jpg"
+lives2 = "Data/Images/lives2.jpg"
 
 
 def welcomeScreen():
@@ -117,6 +119,8 @@ def mainGame():
     crusher_x = 250
     crusher_vel = 10
     crusher_dir = 1
+    lives = 3
+    collide_stage = 1
 
     current_char = game_sprites["character1"]
     character_rect = current_char.get_rect(topleft=(charx, chary))
@@ -139,11 +143,18 @@ def mainGame():
         keys = pygame.key.get_pressed()
 
         if curr_stage == 1:
+            collide_stage = 1
             # rectangle and the collison detector
             character_rect.topleft = (charx, chary)
             beetlerect = game_sprites["beetle2"].get_rect(topleft=(beetlex, beetley))
             if character_rect.colliderect(beetlerect):
-                curr_stage = 5
+                lives -= 1
+                if lives == 2:
+                    curr_stage = 6
+                if lives == 1:
+                    curr_stage = 7
+                if lives == 0:
+                    curr_stage = 5
 
             curr_background = game_sprites["background-1"]
             screen.blit(curr_background, (0, 0))
@@ -223,6 +234,7 @@ def mainGame():
             clock.tick(fps)
 
         elif curr_stage == 2:
+            collide_stage = 2
             # rectangle and collison detector
             player_rect = current_char.get_rect(topleft=(charx, chary))
             bullet_left_rect = game_sprites["bullet-left"].get_rect(
@@ -240,7 +252,13 @@ def mainGame():
                 or player_rect.colliderect(bullet_left2_rect)
                 or player_rect.colliderect(bullet_right_rect)
             ):
-                curr_stage = 5
+                lives -= 1
+                if lives == 2:
+                    curr_stage = 6
+                if lives == 1:
+                    curr_stage = 7
+                if lives == 0:
+                    curr_stage = 5
 
             curr_background = game_sprites["background-2"]
             screen.blit(curr_background, (0, 0))
@@ -343,11 +361,13 @@ def mainGame():
                     curr_stage = 3
                     # background_changed2 = True
                     charx = 0
+                    collide_stage += 1
 
             pygame.display.update()
             clock.tick(fps)
 
         elif curr_stage == 3:
+            collide_stage = 3
             player_rect = current_char.get_rect(topleft=(charx, chary))
             crusher1_rect = game_sprites["crusher1"].get_rect(
                 topleft=(crusher_x, crusher_y)
@@ -364,7 +384,13 @@ def mainGame():
                 or player_rect.colliderect(crusher2_rect)
                 or player_rect.colliderect(crusher3_rect)
             ):
-                curr_stage = 5
+                lives -= 1
+                if lives == 2:
+                    curr_stage = 6
+                if lives == 1:
+                    curr_stage = 7
+                if lives == 0:
+                    curr_stage = 5
 
             player_rect = current_char.get_rect(topleft=(charx, chary))
             dragon_rect = curr_dragon.get_rect(topleft=(drag_x, drag_y))
@@ -372,12 +398,24 @@ def mainGame():
             fire2_rect = game_sprites["fire2"].get_rect(topleft=(fire_x2, fire_y))
 
             if player_rect.colliderect(dragon_rect):
-                curr_stage = 5
+                lives -= 1
+                if lives == 2:
+                    curr_stage = 6
+                if lives == 1:
+                    curr_stage = 7
+                if lives == 0:
+                    curr_stage = 5
 
             if player_rect.colliderect(fire_rect) or player_rect.colliderect(
                 fire2_rect
             ):
-                curr_stage = 5
+                lives -= 1
+                if lives == 2:
+                    curr_stage = 6
+                if lives == 1:
+                    curr_stage = 7
+                if lives == 0:
+                    curr_stage = 5
 
             curr_background = game_sprites["background-3"]
             curr_dragon = game_sprites["drag1"]
@@ -522,7 +560,48 @@ def mainGame():
             if keys[pygame.K_RETURN]:
                 curr_stage = 1
                 charx = int(screen_width / 10)
+                chary = (
+                    int(
+                        screen_height
+                        - (screen_height - game_sprites["character1"].get_height())
+                    )
+                    * 6.2
+                )
+                beetlex = int(random.randint(450, 850))
+                beetley = int(530)
+                beetle_vel_x = 5
+                bullet_left_x = 573
+                bullet_left_x2 = screen_width - 100
+                bullet_right_x = 653
+                bullet_left_vel = -5
+                bullet_right_vel = 5
+                cannon_x = 600
+                cannon_y = 490
+                beetle_dir = 1
+                jump_count = 10
+                flagx = 0
+                flagy = 490
+                Jumping = False
+                flag_activated = False
+                lever_activated = False
+                flag_lift = False
+                drag_x = 1000
+                drag_y = 360
+                drag_vel_y = -2
+                drag_dir = 1
+                fire_x = 950
+                fire_x2 = 1300
+                fire_vel = -5
+                x = False
+                crusher_y = -350
+                crusher_x = 250
+                crusher_vel = 10
+                crusher_dir = 1
+                lives = 3
+
                 current_char = game_sprites["character1"]
+                character_rect = current_char.get_rect(topleft=(charx, chary))
+                curr_beetle = game_sprites["beetle2"]
             if keys[pygame.K_RIGHT]:
                 current_char == game_sprites["character1"]
                 if current_char == game_sprites["character1"]:
@@ -573,6 +652,63 @@ def mainGame():
             if keys[pygame.K_RETURN]:
                 curr_stage = 1
                 charx = int(screen_width / 10)
+                chary = (
+                    int(
+                        screen_height
+                        - (screen_height - game_sprites["character1"].get_height())
+                    )
+                    * 6.2
+                )
+                beetlex = int(random.randint(450, 850))
+                beetley = int(530)
+                beetle_vel_x = 5
+                bullet_left_x = 573
+                bullet_left_x2 = screen_width - 100
+                bullet_right_x = 653
+                bullet_left_vel = -5
+                bullet_right_vel = 5
+                cannon_x = 600
+                cannon_y = 490
+                beetle_dir = 1
+                jump_count = 10
+                flagx = 0
+                flagy = 490
+                Jumping = False
+                flag_activated = False
+                lever_activated = False
+                flag_lift = False
+                drag_x = 1000
+                drag_y = 360
+                drag_vel_y = -2
+                drag_dir = 1
+                fire_x = 950
+                fire_x2 = 1300
+                fire_vel = -5
+                x = False
+                crusher_y = -350
+                crusher_x = 250
+                crusher_vel = 10
+                crusher_dir = 1
+                lives = 3
+
+                current_char = game_sprites["character1"]
+                character_rect = current_char.get_rect(topleft=(charx, chary))
+                curr_beetle = game_sprites["beetle2"]
+            pygame.display.update()
+            clock.tick(fps)
+
+        elif curr_stage == 6 or curr_stage == 7:
+            if curr_stage == 6:
+                curr_background = game_sprites["lives2"]
+            elif curr_stage == 7:
+                curr_background = game_sprites["lives1"]
+            screen.blit(curr_background, (0, 0))
+            if keys[pygame.K_RETURN]:
+                curr_stage = collide_stage
+                if curr_stage == 1:
+                    charx = int(screen_width / 10)
+                else:
+                    charx = 0
                 chary = (
                     int(
                         screen_height
@@ -672,6 +808,8 @@ if __name__ == "__main__":
     game_sprites["crusher2"] = pygame.image.load(crusher).convert_alpha()
     game_sprites["crusher3"] = pygame.image.load(crusher).convert_alpha()
     game_sprites["restart"] = pygame.image.load(restart).convert_alpha()
+    game_sprites["lives1"] = pygame.image.load(lives1).convert_alpha()
+    game_sprites["lives2"] = pygame.image.load(lives2).convert_alpha()
 
     # Game Sounds
     # game_sounds['game-over'] = pygame.mixer.Sound('Data/Music/game-over.wav')
