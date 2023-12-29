@@ -82,9 +82,7 @@ def mainGame():
     chary = (
         int(screen_height - (screen_height - game_sprites["character1"].get_height()))
         * 6.2
-    )  # -game_sprites['pipe'].get_height()
-    # creating pipe
-    # pipeHeight = game_sprites['pipe'].get_height()
+    )
     pipe1x = int(900)
     pipe1y = int(480)
     pipe2x = int(400)
@@ -144,7 +142,6 @@ def mainGame():
 
         if curr_stage == 1:
             collide_stage = 1
-            # rectangle and the collison detector
             character_rect.topleft = (charx, chary)
             beetlerect = game_sprites["beetle2"].get_rect(topleft=(beetlex, beetley))
             if character_rect.colliderect(beetlerect):
@@ -200,11 +197,7 @@ def mainGame():
             if Jumping:
                 if jump_count >= -10:
                     chary -= (jump_count * abs(jump_count)) * 0.5
-                    # charx =+ 10
                     jump_count -= 1
-
-                # elif abs(charx - pipe2x) > 50 and abs(charx -pipe1x)>50:
-                #     chary == game_sprites['pipe'].get_height()
                 else:
                     Jumping = False
                     jump_count = 10
@@ -216,7 +209,6 @@ def mainGame():
                         * 6.2
                     )
 
-            # beetle related
             beetlex += beetle_dir * beetle_vel_x
             if beetlex >= 850:
                 beetle_dir *= -1
@@ -228,14 +220,12 @@ def mainGame():
             if charx > screen_width - 20:
                 charx = 0
                 curr_stage = 2
-                # background_changed1 = True
 
             pygame.display.update()
             clock.tick(fps)
 
         elif curr_stage == 2:
             collide_stage = 2
-            # rectangle and collison detector
             player_rect = current_char.get_rect(topleft=(charx, chary))
             bullet_left_rect = game_sprites["bullet-left"].get_rect(
                 topleft=(bullet_left_x, 500)
@@ -299,11 +289,7 @@ def mainGame():
             if Jumping:
                 if jump_count >= -10:
                     chary -= (jump_count * abs(jump_count)) * 0.5
-                    # charx =+ 10
                     jump_count -= 1
-
-                # elif abs(charx - pipe2x) > 50 and abs(charx -pipe1x)>50:
-                #     chary == game_sprites['pipe'].get_height()
                 else:
                     Jumping = False
                     jump_count = 10
@@ -378,36 +364,18 @@ def mainGame():
             crusher3_rect = game_sprites["crusher3"].get_rect(
                 topleft=(crusher_x + 500, crusher_y)
             )
-
-            if (
-                player_rect.colliderect(crusher1_rect)
-                or player_rect.colliderect(crusher2_rect)
-                or player_rect.colliderect(crusher3_rect)
-            ):
-                lives -= 1
-                if lives == 2:
-                    curr_stage = 6
-                if lives == 1:
-                    curr_stage = 7
-                if lives == 0:
-                    curr_stage = 5
-
             player_rect = current_char.get_rect(topleft=(charx, chary))
             dragon_rect = curr_dragon.get_rect(topleft=(drag_x, drag_y))
             fire_rect = game_sprites["fire"].get_rect(topleft=(fire_x, fire_y))
             fire2_rect = game_sprites["fire2"].get_rect(topleft=(fire_x2, fire_y))
 
-            if player_rect.colliderect(dragon_rect):
-                lives -= 1
-                if lives == 2:
-                    curr_stage = 6
-                if lives == 1:
-                    curr_stage = 7
-                if lives == 0:
-                    curr_stage = 5
-
-            if player_rect.colliderect(fire_rect) or player_rect.colliderect(
-                fire2_rect
+            if (
+                player_rect.colliderect(crusher1_rect)
+                or player_rect.colliderect(crusher2_rect)
+                or player_rect.colliderect(crusher3_rect)
+                or player_rect.colliderect(dragon_rect)
+                or player_rect.colliderect(fire_rect)
+                or player_rect.colliderect(fire2_rect)
             ):
                 lives -= 1
                 if lives == 2:
@@ -628,11 +596,8 @@ def mainGame():
             if Jumping:
                 if jump_count >= -10:
                     chary -= (jump_count * abs(jump_count)) * 0.5
-                    # charx =+ 10
                     jump_count -= 1
 
-                # elif abs(charx - pipe2x) > 50 and abs(charx -pipe1x)>50:
-                #     chary == game_sprites['pipe'].get_height()
                 else:
                     Jumping = False
                     jump_count = 10
@@ -755,12 +720,10 @@ def mainGame():
 
 
 if __name__ == "__main__":
-    # Main function from where game starts
-    pygame.init()  # initializes all pygame modules
+    pygame.init()
     clock = pygame.time.Clock()
-    pygame.display.set_caption("Adventures By Elites")
+    pygame.display.set_caption("ELITE ADVENTURES")
 
-    # Game sprites
     game_sprites["start_screen"] = pygame.image.load(start_screen).convert_alpha()
     game_sprites["pipe"] = pygame.image.load(pipe).convert_alpha()
     game_sprites["logo"] = pygame.image.load(logo).convert_alpha()
@@ -810,13 +773,6 @@ if __name__ == "__main__":
     game_sprites["restart"] = pygame.image.load(restart).convert_alpha()
     game_sprites["lives1"] = pygame.image.load(lives1).convert_alpha()
     game_sprites["lives2"] = pygame.image.load(lives2).convert_alpha()
-
-    # Game Sounds
-    # game_sounds['game-over'] = pygame.mixer.Sound('Data/Music/game-over.wav')
-    # game_sounds['hit'] = pygame.mixer.Sound('Data/Music')
-    # game_sounds['coins'] = pygame.mixer.Sound('Data/Music')
-    # game_sounds['jump'] = pygame.mixer.Sound('Data/Music')
-    # game_sounds['something'] = pygame.mixer.Sound('Data/Music')
 
     # Game Loop
     while True:
