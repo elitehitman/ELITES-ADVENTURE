@@ -21,10 +21,10 @@ This is a simple 2D platformer game created using Python and Pygame. The objecti
 - Press LCTrl to pick up the flag.
 
 ## Screenshots
-![Screenshot 1](GameFiles/Data/Images/GameImg/StarScreen.png)
-![Screenshot 1](GameFiles/Data/Images/GameImg/FirstStage.png)
-![Screenshot 1](GameFiles/Data/Images/GameImg/SecondStage.png)
-![Screenshot 1](GameFiles/Data/Images/GameImg/ThirdStage.png)
+![Screenshot 1](GameFiles/Data/Images/GameImg/StartScreen.png)
+![Screenshot 1](GameFiles/Data/Images/GameImg/FIrstStage.png)
+![Screenshot 1](GameFiles/Data/Images/GameImg/Second+Stage.png)
+![Screenshot 1](GameFiles/Data/Images/GameImg/FinalStage.png)
 ![Screenshot 1](GameFiles/Data/Images/GameImg/Lives-1.png)
 ![Screenshot 1](GameFiles/Data/Images/GameImg/Lives-2.png)
 ![Screenshot 1](GameFiles/Data/Images/GameImg/GameCompleted.png)
