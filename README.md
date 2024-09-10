@@ -12,8 +12,8 @@ This is a simple 2D platformer game created using Python and Pygame. The objecti
 1. Install Python (if not already installed) from [python.org](https://www.python.org/).
 2. Install Pygame by running `pip install pygame`.
 3. Clone this repository or download the ZIP file.
-4. Navigate to the project directory.
-5. Run `python main.py` to start the game.
+4. Navigate to the project directory (cd PDLAB-Project)
+5. Run `python PD-Project-File.py` to start the game.
 
 ## Controls
 - Use the arrow keys (left and right) to move the player character.
